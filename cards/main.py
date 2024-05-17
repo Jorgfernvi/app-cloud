@@ -1,5 +1,4 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.routing import APIRouter
 import mysql.connector
 import schemas
 
@@ -17,10 +16,7 @@ def get_db_connection():
         host=host_name, port=port_number, user=user_name, password=password_db, database=database_name
     )
 
-
-router = APIRouter()
-
-@router.post("/")
+@app.post("/cards")
 def create_card(card: schemas.Card):
     db = get_db_connection()
     cursor = db.cursor()
@@ -31,7 +27,7 @@ def create_card(card: schemas.Card):
     db.close()
     return {"card_id": card_id, "message": "Card created successfully"}
 
-@router.put("/{card_id}/block")
+@app.put("/cards/{card_id}/block")
 def block_card(card_id: int):
     db = get_db_connection()
     cursor = db.cursor()
@@ -40,11 +36,11 @@ def block_card(card_id: int):
     db.close()
     return {"message": "Card blocked successfully"}
 
-@router.get("/{card_id}/transactions")
+@app.get("/cards/{card_id}/transactions")
 def get_card_transactions(card_id: int):
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM card_transactions WHERE card_id = %s", (card_id,))
+    cursor.execute("SELECT * FROM cards  WHERE card_number = %s", (card_id,))
     transactions = cursor.fetchall()
     db.close()
     if not transactions:
