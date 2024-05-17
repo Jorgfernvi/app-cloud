@@ -1,0 +1,82 @@
+openapi: 3.0.0
+info:
+  title: Bank API - Loans
+  version: 1.0.0
+  description: API for managing loans
+
+paths:
+  /loans:
+    post:
+      summary: Apply for Loan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoanApplication'
+      responses:
+        '200':
+          description: Loan application submitted successfully
+
+  /loans/{loan_id}/status:
+    get:
+      summary: Get Loan Status
+      parameters:
+        - in: path
+          name: loan_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+        '404':
+          description: Loan not found
+
+  /loans/{loan_id}/payment:
+    post:
+      summary: Make Loan Payment
+      parameters:
+        - in: path
+          name: loan_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoanPayment'
+      responses:
+        '200':
+          description: Payment made successfully
+        '404':
+          description: Loan not found
+
+components:
+  schemas:
+    LoanApplication:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        amount:
+          type: number
+          format: float
+        term:
+          type: integer
+
+    LoanPayment:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: float

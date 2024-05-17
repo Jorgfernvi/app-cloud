@@ -1,0 +1,116 @@
+openapi: 3.0.0
+info:
+  title: Bank API - Reports and Analysis
+  version: 1.0.0
+  description: API for generating financial reports and analyses
+
+paths:
+  /reports/expenses:
+    get:
+      summary: Generate Expense Report
+      parameters:
+        - in: query
+          name: user_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: start_date
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: end_date
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  report:
+                    type: object
+                    properties:
+                      total_expenses:
+                        type: number
+                        format: float
+                      categories:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            category:
+                              type: string
+                            amount:
+                              type: number
+                              format: float
+        '404':
+          description: User not found
+
+  /reports/income:
+    get:
+      summary: Generate Income Report
+      parameters:
+        - in: query
+          name: user_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: start_date
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: end_date
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  report:
+                    type: object
+                    properties:
+                      total_income:
+                        type: number
+                        format: float
+                      sources:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            source:
+                              type: string
+                            amount:
+                              type: number
+                              format: float
+        '404':
+          description: User not found
+
+components:
+  schemas:
+    ReportRequest:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date

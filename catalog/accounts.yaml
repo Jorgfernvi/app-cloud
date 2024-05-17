@@ -1,0 +1,90 @@
+openapi: 3.0.0
+info:
+  title: Bank API - Account Management
+  version: 1.0.0
+  description: API for managing bank accounts
+
+paths:
+  /accounts:
+    post:
+      summary: Create Account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        '200':
+          description: Account created successfully
+
+  /accounts/{account_id}:
+    put:
+      summary: Update Account
+      parameters:
+        - in: path
+          name: account_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        '200':
+          description: Account updated successfully
+        '404':
+          description: Account not found
+
+    delete:
+      summary: Delete Account
+      parameters:
+        - in: path
+          name: account_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Account deleted successfully
+        '404':
+          description: Account not found
+
+  /accounts/{account_id}/balance:
+    get:
+      summary: Get Account Balance
+      parameters:
+        - in: path
+          name: account_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  balance:
+                    type: number
+                    format: float
+        '404':
+          description: Account not found
+
+components:
+  schemas:
+    Account:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        name:
+          type: string
+        balance:
+          type: number
+          format: float

@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  authentication:
+    image: jorgfernvi/authentication-api:latest
+    ports:
+      - "8001:8001"
+    environment:
+      DB_HOST: 44.218.163.17
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: utec
+      DB_NAME: bd_api_bank
+
+  accounts:
+    image: jorgfernvi/accounts-api:latest
+    ports:
+      - "8002:8002"
+    environment:
+      DB_HOST: 44.218.163.17
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: utec
+      DB_NAME: bd_api_bank
+
+  transactions:
+    image: jorgfernvi/transactions-api:latest
+    ports:
+      - "8003:8003"
+    environment:
+      DB_HOST: 44.218.163.17
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: utec
+      DB_NAME: bd_api_bank
+
+  cards:
+    image: jorgfernvi/cards-api:latest
+    ports:
+      - "8004:8004"
+    environment:
+      DB_HOST: 44.218.163.17
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: utec
+      DB_NAME: bd_api_bank
+
+  loans:
+    image: jorgfernvi/loans-api:latest
+    ports:
+      - "8005:8005"
+    environment:
+      DB_HOST: 44.218.163.17
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: utec
+      DB_NAME: bd_api_bank
+
+  notifications:
+    image: jorgfernvi/notifications-api:latest
+    ports:
+      - "8006:8006"
+    environment:
+      DB_HOST: 44.218.163.17
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: utec
+      DB_NAME: bd_api_bank
+
+  reports:
+    image: jorgfernvi/reports-api:latest
+    ports:
+      - "8007:8007"
+    environment:
+      DB_HOST: 44.218.163.17
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: utec
+      DB_NAME: bd_api_bank

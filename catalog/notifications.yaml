@@ -1,0 +1,55 @@
+openapi: 3.0.0
+info:
+  title: Bank API - Notifications
+  version: 1.0.0
+  description: API for managing notifications
+
+paths:
+  /notifications:
+    post:
+      summary: Create Notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notification'
+      responses:
+        '200':
+          description: Notification created successfully
+
+  /notifications/{user_id}:
+    get:
+      summary: Get Notifications
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notifications:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Notification'
+        '404':
+          description: User not found
+
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        message:
+          type: string
+        read:
+          type: boolean

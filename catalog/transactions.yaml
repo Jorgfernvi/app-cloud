@@ -1,0 +1,64 @@
+openapi: 3.0.0
+info:
+  title: Bank API - Transactions
+  version: 1.0.0
+  description: API for handling transactions
+
+paths:
+  /transfer:
+    post:
+      summary: Internal Transfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferRequest'
+      responses:
+        '200':
+          description: Transfer successful
+        '400':
+          description: Insufficient funds
+        '404':
+          description: Account not found
+
+  /service-payment:
+    post:
+      summary: Service Payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServicePaymentRequest'
+      responses:
+        '200':
+          description: Service payment successful
+        '400':
+          description: Insufficient funds
+        '404':
+          description: Account not found
+
+components:
+  schemas:
+    TransferRequest:
+      type: object
+      properties:
+        from_account:
+          type: integer
+        to_account:
+          type: integer
+        amount:
+          type: number
+          format: float
+
+    ServicePaymentRequest:
+      type: object
+      properties:
+        account_id:
+          type: integer
+        service_provider_id:
+          type: integer
+        amount:
+          type: number
+          format: float

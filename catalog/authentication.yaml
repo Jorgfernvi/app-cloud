@@ -1,0 +1,76 @@
+openapi: 3.0.0
+info:
+  title: Bank API - Authentication
+  version: 1.0.0
+  description: API for user authentication and authorization
+
+paths:
+  /auth/login:
+    post:
+      summary: User Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '401':
+          description: Invalid credentials
+
+  /auth/register:
+    post:
+      summary: User Registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+      responses:
+        '200':
+          description: User registered successfully
+
+  /auth/token:
+    get:
+      summary: Validate Token
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Token is valid
+        '401':
+          description: Invalid token
+
+components:
+  schemas:
+    UserLogin:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    UserRegister:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        email:
+          type: string

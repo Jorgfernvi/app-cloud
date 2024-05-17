@@ -1,0 +1,83 @@
+openapi: 3.0.0
+info:
+  title: Bank API - Card Management
+  version: 1.0.0
+  description: API for managing debit and credit cards
+
+paths:
+  /cards:
+    post:
+      summary: Create Card
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Card'
+      responses:
+        '200':
+          description: Card created successfully
+
+  /cards/{card_id}/block:
+    put:
+      summary: Block Card
+      parameters:
+        - in: path
+          name: card_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Card blocked successfully
+        '404':
+          description: Card not found
+
+  /cards/{card_id}/transactions:
+    get:
+      summary: Get Card Transactions
+      parameters:
+        - in: path
+          name: card_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CardTransaction'
+        '404':
+          description: Card not found
+
+components:
+  schemas:
+    Card:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        card_number:
+          type: string
+        card_type:
+          type: string
+        balance:
+          type: number
+          format: float
+
+    CardTransaction:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: float
+        transaction_date:
+          type: string
+          format: date-time
