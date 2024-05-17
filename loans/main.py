@@ -1,5 +1,4 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.routing import APIRouter
 import mysql.connector
 import schemas
 
@@ -16,10 +15,7 @@ def get_db_connection():
         host=host_name, port=port_number, user=user_name, password=password_db, database=database_name
     )
 
-
-router = APIRouter()
-
-@router.post("/")
+@app.post("/loans")
 def apply_for_loan(loan: schemas.LoanApplication):
     db = get_db_connection()
     cursor = db.cursor()
@@ -30,7 +26,7 @@ def apply_for_loan(loan: schemas.LoanApplication):
     db.close()
     return {"loan_id": loan_id, "message": "Loan application submitted successfully"}
 
-@router.get("/{loan_id}/status")
+@app.get("/loans/{loan_id}/status")
 def get_loan_status(loan_id: int):
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
@@ -41,7 +37,7 @@ def get_loan_status(loan_id: int):
         raise HTTPException(status_code=404, detail="Loan not found")
     return {"loan_id": loan_id, "status": loan['status']}
 
-@router.post("/{loan_id}/payment")
+@app.post("/loans/{loan_id}/payment")
 def make_loan_payment(loan_id: int, payment: schemas.LoanPayment):
     db = get_db_connection()
     cursor = db.cursor()
