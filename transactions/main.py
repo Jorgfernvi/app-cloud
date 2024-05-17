@@ -1,5 +1,4 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.routing import APIRouter
 import mysql.connector
 import schemas
 
@@ -16,10 +15,7 @@ def get_db_connection():
         host=host_name, port=port_number, user=user_name, password=password_db, database=database_name
     )
 
-
-router = APIRouter()
-
-@router.post("/transfer")
+@app.post("/transfer")
 def transfer_funds(transfer_request: schemas.TransferRequest):
     db = get_db_connection()
     cursor = db.cursor()
