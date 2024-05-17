@@ -1,5 +1,4 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.routing import APIRouter
 import mysql.connector
 import schemas
 
@@ -16,10 +15,8 @@ def get_db_connection():
         host=host_name, port=port_number, user=user_name, password=password_db, database=database_name
     )
 
-router = APIRouter()
-
-@router.post("/login")
-def login_user(user: schemas.User):
+@app.post("/login")
+def login_user(user: schemas.UserLogin):
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
     cursor.execute("SELECT id FROM users WHERE username = %s AND password = %s", (user.username, user.password))
@@ -33,8 +30,8 @@ def login_user(user: schemas.User):
     db.close()
     return {"token": token}
 
-@router.post("/register")
-def register_user(user: schemas.User):
+@app.post("/register")
+def register_user(user: schemas.UserRegister):
     db = get_db_connection()
     cursor = db.cursor()
     cursor.execute("INSERT INTO users (username, password, email) VALUES (%s, %s, %s)", (user.username, user.password, user.email))
