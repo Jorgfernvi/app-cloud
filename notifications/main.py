@@ -1,5 +1,4 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.routing import APIRouter
 import mysql.connector
 import schemas
 
@@ -16,10 +15,7 @@ def get_db_connection():
         host=host_name, port=port_number, user=user_name, password=password_db, database=database_name
     )
 
-
-router = APIRouter()
-
-@router.post("/")
+@app.post("/")
 def create_notification(notification: schemas.Notification):
     db = get_db_connection()
     cursor = db.cursor()
@@ -30,7 +26,7 @@ def create_notification(notification: schemas.Notification):
     db.close()
     return {"notification_id": notification_id, "message": "Notification created successfully"}
 
-@router.get("/{user_id}")
+@app.get("/{user_id}")
 def get_notifications(user_id: int):
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
@@ -39,7 +35,7 @@ def get_notifications(user_id: int):
     db.close()
     return {"user_id": user_id, "notifications": notifications}
 
-@router.put("/{notification_id}/read")
+@app.put("/{notification_id}/read")
 def mark_notification_as_read(notification_id: int):
     db = get_db_connection()
     cursor = db.cursor()
