@@ -1,5 +1,4 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.routing import APIRouter
 import mysql.connector
 import schemas
 
@@ -16,10 +15,7 @@ def get_db_connection():
         host=host_name, port=port_number, user=user_name, password=password_db, database=database_name
     )
 
-
-router = APIRouter()
-
-@router.get("/expenses")
+@app.get("/expenses")
 def get_expense_report(user_id: int, category: str = None):
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
@@ -33,7 +29,7 @@ def get_expense_report(user_id: int, category: str = None):
     db.close()
     return {"user_id": user_id, "expenses": transactions}
 
-@router.get("/income")
+@app.get("/income")
 def get_income_report(user_id: int):
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
@@ -42,7 +38,7 @@ def get_income_report(user_id: int):
     db.close()
     return {"user_id": user_id, "income": transactions}
 
-@router.get("/financial-analysis")
+@app.get("/financial-analysis")
 def get_financial_analysis(user_id: int):
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
