@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
-  title: Bank API - Notifications
+  title: Notification Service API
   version: 1.0.0
-  description: API for managing notifications
+  description: API for managing user notifications
 
 paths:
   /notifications:
@@ -20,7 +20,7 @@ paths:
 
   /notifications/{user_id}:
     get:
-      summary: Get Notifications
+      summary: Get User Notifications
       parameters:
         - in: path
           name: user_id
@@ -35,12 +35,25 @@ paths:
               schema:
                 type: object
                 properties:
+                  user_id:
+                    type: integer
                   notifications:
                     type: array
                     items:
                       $ref: '#/components/schemas/Notification'
-        '404':
-          description: User not found
+
+  /notifications/{notification_id}/read:
+    put:
+      summary: Mark Notification as Read
+      parameters:
+        - in: path
+          name: notification_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Notification marked as read
 
 components:
   schemas:
@@ -51,5 +64,4 @@ components:
           type: integer
         message:
           type: string
-        read:
-          type: boolean
+
