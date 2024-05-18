@@ -8,7 +8,7 @@ host_name = "44.218.163.17"
 port_number = "8005"
 user_name = "root"
 password_db = "utec"
-database_name = "bd_api_bank"
+database_name = "bd_api_loans"
 
 def get_db_connection():
     return mysql.connector.connect(
@@ -26,22 +26,44 @@ def apply_for_loan(loan: schemas.LoanApplication):
     db.close()
     return {"loan_id": loan_id, "message": "Loan application submitted successfully"}
 
-@app.get("/loans/{loan_id}/status")
-def get_loan_status(loan_id: int):
+@app.get("/loans/{user_id}")
+def get_user_loans(user_id: int):
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
-    cursor.execute("SELECT status FROM loans WHERE id = %s", (loan_id,))
-    loan = cursor.fetchone()
+    cursor.execute("SELECT * FROM loans WHERE user_id = %s", (user_id,))
+    loans = cursor.fetchall()
     db.close()
-    if loan is None:
-        raise HTTPException(status_code=404, detail="Loan not found")
-    return {"loan_id": loan_id, "status": loan['status']}
+    if not loans:
+        raise HTTPException(status_code=404, detail="No loans found for this user")
+    return loans
 
-@app.post("/loans/{loan_id}/payment")
-def make_loan_payment(loan_id: int, payment: schemas.LoanPayment):
+@app.put("/loans/{loan_id}/status")
+def update_loan_status(loan_id: int, status: schemas.LoanStatusUpdate):
     db = get_db_connection()
     cursor = db.cursor()
-    cursor.execute("INSERT INTO loan_payments (loan_id, amount) VALUES (%s, %s)", (loan_id, payment.amount))
+    cursor.execute("UPDATE loans SET status = %s WHERE id = %s", (status.status, loan_id))
     db.commit()
     db.close()
-    return {"message": "Payment made successfully"}
+    return {"message": "Loan status updated successfully"}
+
+@app.get("/loans/{loan_id}/payments")
+def get_loan_payments(loan_id: int):
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM loan_payments WHERE loan_id = %s", (loan_id,))
+    payments = cursor.fetchall()
+    db.close()
+    if not payments:
+        raise HTTPException(status_code=404, detail="No payments found for this loan")
+    return payments
+
+@app.get("/loans/pending")
+def get_pending_loans():
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM loans WHERE status = 'pending'")
+    pending_loans = cursor.fetchall()
+    db.close()
+    if not pending_loans:
+        raise HTTPException(status_code=404, detail="No pending loans found")
+    return pending_loans
