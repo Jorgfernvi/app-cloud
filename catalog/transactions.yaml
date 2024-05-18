@@ -1,13 +1,16 @@
 openapi: 3.0.0
 info:
-  title: Bank API - Transactions
+  title: Bank API - Funds Transfer
   version: 1.0.0
-  description: API for handling transactions
+  description: API for transferring funds between accounts
+
+servers:
+  - url: http://localhost:8000
 
 paths:
   /transfer:
     post:
-      summary: Internal Transfer
+      summary: Transfer funds between accounts
       requestBody:
         required: true
         content:
@@ -17,27 +20,83 @@ paths:
       responses:
         '200':
           description: Transfer successful
-        '400':
-          description: Insufficient funds
-        '404':
-          description: Account not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
 
-  /service-payment:
-    post:
-      summary: Service Payment
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ServicePaymentRequest'
+  /accounts/{account_id}/balance:
+    get:
+      summary: Get account balance
+      parameters:
+        - in: path
+          name: account_id
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         '200':
-          description: Service payment successful
-        '400':
-          description: Insufficient funds
-        '404':
-          description: Account not found
+          description: Account balance retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  account_id:
+                    type: integer
+                  balance:
+                    type: number
+                    format: float
+
+  /accounts/{account_id}/transactions:
+    get:
+      summary: Get account transactions
+      parameters:
+        - in: path
+          name: account_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Account transactions retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  account_id:
+                    type: integer
+                  transactions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Transaction'
+
+  /transactions/{transaction_id}:
+    delete:
+      summary: Cancel transaction
+      parameters:
+        - in: path
+          name: transaction_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Transaction canceled successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
 
 components:
   schemas:
@@ -51,14 +110,18 @@ components:
         amount:
           type: number
           format: float
-
-    ServicePaymentRequest:
+    Transaction:
       type: object
       properties:
-        account_id:
+        id:
           type: integer
-        service_provider_id:
+        from_account:
+          type: integer
+        to_account:
           type: integer
         amount:
           type: number
           format: float
+        transaction_type:
+          type: string
+
