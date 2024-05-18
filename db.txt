@@ -1,0 +1,213 @@
+
+
+########A
+-- Eliminar la base de datos si ya existe
+DROP DATABASE IF EXISTS bd_api_accounts;
+
+-- Crear la base de datos
+CREATE DATABASE bd_api_accounts CHARSET utf8mb4;
+
+-- Utilizar la base de datos recién creada
+USE bd_api_accounts;
+
+-- Crear la tabla 'accounts'
+CREATE TABLE accounts (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    user_id INT(11) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    balance DECIMAL(10, 2) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+-- Insertar datos de ejemplo en la tabla 'accounts'
+INSERT INTO accounts (user_id, name, balance) VALUES
+(1, 'Account1', 1000.00),
+(2, 'Account2', 1500.50),
+(3, 'Account3', 2000.00),
+(4, 'Account4', 2500.75),
+(5, 'Account5', 3000.00),
+(6, 'Account6', 3500.20),
+(7, 'Account7', 4000.00),
+(8, 'Account8', 4500.60),
+(9, 'Account9', 5000.00),
+(10, 'Account10', 5500.80),
+(11, 'Account11', 6000.00),
+(12, 'Account12', 6500.90),
+(13, 'Account13', 7000.00),
+(14, 'Account14', 7500.10),
+(15, 'Account15', 8000.00),
+(16, 'Account16', 8500.20),
+(17, 'Account17', 9000.00),
+(18, 'Account18', 9500.30),
+(19, 'Account19', 10000.00),
+(20, 'Account20', 10500.40);
+
+
+#####b
+
+CREATE DATABASE bd_api_authen;
+
+USE bd_api_authen;
+
+-- Tabla para almacenar los usuarios
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE
+);
+
+-- Tabla para almacenar los tokens de autenticación
+CREATE TABLE tokens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    token VARCHAR(255) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabla para almacenar los tokens de recuperación de contraseña
+CREATE TABLE recovery_tokens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    token VARCHAR(255) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+USE bd_api_authen;
+
+-- Insertar usuarios de ejemplo
+INSERT INTO users (username, password, email) VALUES 
+('user1', 'password1', 'user1@example.com'),
+('user2', 'password2', 'user2@example.com'),
+('user3', 'password3', 'user3@example.com');
+
+-- Insertar tokens de autenticación de ejemplo
+-- Nota: En un entorno real, los tokens deben ser generados de manera segura y única
+INSERT INTO tokens (user_id, token) VALUES 
+(1, 'token123'),
+(2, 'token456'),
+(3, 'token789');
+
+-- Insertar tokens de recuperación de contraseña de ejemplo
+-- Nota: En un entorno real, los tokens deben ser generados de manera segura y única
+INSERT INTO recovery_tokens (user_id, token) VALUES 
+(1, 'recoverytoken123'),
+(2, 'recoverytoken456'),
+(3, 'recoverytoken789');
+
+
+######C
+CREATE DATABASE bd_api_cards;
+
+USE bd_api_cards;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(50) NOT NULL,
+    email VARCHAR(100)
+);
+
+CREATE TABLE cards (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    card_number VARCHAR(20) NOT NULL,
+    card_type VARCHAR(50) NOT NULL,
+    balance DECIMAL(10, 2) NOT NULL,
+    status VARCHAR(20) DEFAULT 'active'
+);
+
+CREATE TABLE transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    card_id INT NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    transaction_date DATETIME NOT NULL
+);
+
+
+-- Insertar valores en la tabla users
+INSERT INTO users (username, password, email) VALUES ('user1', 'password1', 'user1@example.com');
+INSERT INTO users (username, password, email) VALUES ('user2', 'password2', 'user2@example.com');
+
+-- Insertar valores en la tabla cards
+INSERT INTO cards (user_id, card_number, card_type, balance) VALUES (1, '1234567890123456', 'debit', 1000.00);
+INSERT INTO cards (user_id, card_number, card_type, balance) VALUES (2, '9876543210987654', 'credit', 5000.00);
+
+-- Insertar valores en la tabla transactions
+INSERT INTO transactions (card_id, amount, transaction_date) VALUES (1, 100.00, '2024-01-01 10:00:00');
+INSERT INTO transactions (card_id, amount, transaction_date) VALUES (2, 200.00, '2024-01-02 15:30:00');
+
+
+#### D
+
+CREATE DATABASE bd_api_loans;
+
+USE bd_api_loans;
+
+
+CREATE TABLE loans (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    term INT NOT NULL,
+    status VARCHAR(50) DEFAULT 'pending'
+);
+
+
+CREATE TABLE loan_payments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    loan_id INT NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    payment_date DATETIME NOT NULL
+);
+
+#### E
+
+CREATE DATABASE bd_api_noti;
+
+USE bd_api_noti;
+
+CREATE TABLE notifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    message TEXT NOT NULL,
+    status ENUM('unread', 'read') DEFAULT 'unread'
+);
+
+#### F
+
+
+CREATE DATABASE bd_api_reports;
+
+USE bd_api_reports;
+
+
+CREATE TABLE transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    transaction_type ENUM('income', 'expense') NOT NULL,
+    category VARCHAR(255)
+);
+
+#### G
+
+DROP DATABASE IF EXISTS  bd_api_transac;
+CREATE DATABASE bd_api_transac ;
+USE bd_api_transac;
+
+
+
+CREATE TABLE accounts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    balance DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    from_account INT NOT NULL,
+    to_account INT NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    transaction_type ENUM('internal', 'external') NOT NULL
+);
