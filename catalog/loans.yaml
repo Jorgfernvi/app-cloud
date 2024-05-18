@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
-  title: Bank API - Loans
+  title: Loans Service API
   version: 1.0.0
-  description: API for managing loans
+  description: API for managing user loans
 
 paths:
   /loans:
@@ -18,9 +18,47 @@ paths:
         '200':
           description: Loan application submitted successfully
 
-  /loans/{loan_id}/status:
+  /loans/{user_id}:
     get:
-      summary: Get Loan Status
+      summary: Get User Loans
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Loan'
+
+  /loans/{loan_id}/status:
+    put:
+      summary: Update Loan Status
+      parameters:
+        - in: path
+          name: loan_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoanStatusUpdate'
+      responses:
+        '200':
+          description: Loan status updated successfully
+
+  /loans/{loan_id}/payments:
+    get:
+      summary: Get Loan Payments
       parameters:
         - in: path
           name: loan_id
@@ -33,33 +71,22 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-        '404':
-          description: Loan not found
+                type: array
+                items:
+                  $ref: '#/components/schemas/LoanPayment'
 
-  /loans/{loan_id}/payment:
-    post:
-      summary: Make Loan Payment
-      parameters:
-        - in: path
-          name: loan_id
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LoanPayment'
+  /loans/pending:
+    get:
+      summary: Get Pending Loans
       responses:
         '200':
-          description: Payment made successfully
-        '404':
-          description: Loan not found
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Loan'
 
 components:
   schemas:
@@ -74,9 +101,33 @@ components:
         term:
           type: integer
 
+    LoanStatusUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+
     LoanPayment:
       type: object
       properties:
+        loan_id:
+          type: integer
         amount:
           type: number
           format: float
+
+    Loan:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        amount:
+          type: number
+          format: float
+        term:
+          type: integer
+        status:
+          type: string
+
