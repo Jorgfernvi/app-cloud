@@ -6,7 +6,7 @@ class CardCreate(BaseModel):
     account_id: int
     card_number: str
     card_type: str
-    expiration_date: date
+     balance :float
 
 class CardUpdate(BaseModel):
     card_number: Optional[str] = None
