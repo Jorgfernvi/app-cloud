@@ -1,116 +1,122 @@
 openapi: 3.0.0
 info:
-  title: Bank API - Reports and Analysis
+  title: API de Informes Financieros
   version: 1.0.0
-  description: API for generating financial reports and analyses
+  description: API para informes financieros basados en transacciones
+
+servers:
+  - url: http://44.218.163.17:8005
 
 paths:
-  /reports/expenses:
+  /expenses:
     get:
-      summary: Generate Expense Report
+      summary: Obtener informe de gastos
       parameters:
         - in: query
           name: user_id
           required: true
+          description: ID del usuario
           schema:
             type: integer
         - in: query
-          name: start_date
-          required: true
+          name: category
+          required: false
+          description: Categoría de gastos
           schema:
             type: string
-            format: date
-        - in: query
-          name: end_date
-          required: true
-          schema:
-            type: string
-            format: date
       responses:
         '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  report:
-                    type: object
-                    properties:
-                      total_expenses:
-                        type: number
-                        format: float
-                      categories:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            category:
-                              type: string
-                            amount:
-                              type: number
-                              format: float
-        '404':
-          description: User not found
+          description: Informe de gastos obtenido correctamente
 
-  /reports/income:
+  /income:
     get:
-      summary: Generate Income Report
+      summary: Obtener informe de ingresos
       parameters:
         - in: query
           name: user_id
           required: true
+          description: ID del usuario
           schema:
             type: integer
-        - in: query
-          name: start_date
-          required: true
-          schema:
-            type: string
-            format: date
-        - in: query
-          name: end_date
-          required: true
-          schema:
-            type: string
-            format: date
       responses:
         '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  report:
-                    type: object
-                    properties:
-                      total_income:
-                        type: number
-                        format: float
-                      sources:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            source:
-                              type: string
-                            amount:
-                              type: number
-                              format: float
+          description: Informe de ingresos obtenido correctamente
+
+  /financial-analysis:
+    get:
+      summary: Obtener análisis financiero
+      parameters:
+        - in: query
+          name: user_id
+          required: true
+          description: ID del usuario
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Análisis financiero obtenido correctamente
+
+  /transactions:
+    post:
+      summary: Crear transacción
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        '200':
+          description: Transacción creada correctamente
+
+  /transactions/{transaction_id}:
+    put:
+      summary: Actualizar transacción
+      parameters:
+        - in: path
+          name: transaction_id
+          required: true
+          description: ID de la transacción a actualizar
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        '200':
+          description: Transacción actualizada correctamente
         '404':
-          description: User not found
+          description: Transacción no encontrada
+
+    delete:
+      summary: Eliminar transacción
+      parameters:
+        - in: path
+          name: transaction_id
+          required: true
+          description: ID de la transacción a eliminar
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Transacción eliminada correctamente
+        '404':
+          description: Transacción no encontrada
 
 components:
   schemas:
-    ReportRequest:
+    Transaction:
       type: object
       properties:
         user_id:
           type: integer
-        start_date:
+        amount:
+          type: number
+        transaction_type:
           type: string
-          format: date
-        end_date:
+        category:
           type: string
-          format: date
+
