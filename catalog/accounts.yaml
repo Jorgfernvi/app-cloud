@@ -17,8 +17,46 @@ paths:
       responses:
         '200':
           description: Account created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  account_id:
+                    type: integer
+                  message:
+                    type: string
+    get:
+      summary: Get All Accounts
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
 
   /accounts/{account_id}:
+    get:
+      summary: Get Account by ID
+      parameters:
+        - in: path
+          name: account_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '404':
+          description: Account not found
+
     put:
       summary: Update Account
       parameters:
@@ -70,6 +108,8 @@ paths:
               schema:
                 type: object
                 properties:
+                  account_id:
+                    type: integer
                   balance:
                     type: number
                     format: float
@@ -88,3 +128,4 @@ components:
         balance:
           type: number
           format: float
+
