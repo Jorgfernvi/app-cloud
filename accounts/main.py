@@ -8,7 +8,7 @@ host_name = "44.218.163.17"
 port_number = "8005"
 user_name = "root"
 password_db = "utec"
-database_name = "bd_api_bank"
+database_name = "bd_api_accounts"
 
 # Función para obtener una conexión a la base de datos
 def get_db_connection():
